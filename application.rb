@@ -3,8 +3,6 @@ class MyApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
   register Sinatra::AssetPack
   
-  DB = Sequel.sqlite('cube.db')
-  
   assets {
     serve '/js',     from: 'app/js'        # Optional
     serve '/css',    from: 'app/css'       # Optional
@@ -12,8 +10,7 @@ class MyApp < Sinatra::Base
     
     js :app, '/js/app.js', [
       '/jst.js',
-      '/js/**/*.js',
-      '/js/script.js'
+      '/js/**/*.js'
     ]
 
     css :application, '/css/application.css', [
@@ -31,4 +28,4 @@ class MyApp < Sinatra::Base
     erb :index
   end
   
-end22
+end
