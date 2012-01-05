@@ -2,6 +2,11 @@ DB = Sequel.sqlite
 
 class MyApp < Sinatra::Base
 
+  def self.get_or_post(path, opts={}, &block)
+    get(path, opts, &block)
+    post(path, opts, &block)
+  end
+
   require './models/room.rb'
 
   set :root, File.dirname(__FILE__)
@@ -39,10 +44,6 @@ class MyApp < Sinatra::Base
     @sec = PUSHER_SECRET
     erb :index
   end
-  
-  get '/room/create' do
-    
-  end
     
   post '/join' do
     session[:identity] = {
@@ -52,21 +53,25 @@ class MyApp < Sinatra::Base
     redirect request.referer
   end
   
-  register Sinatra::JstPages
-  serve_jst '/jst.js'
-  
-  get '/' do
-    erb :index
-  end
-  
-  get '/room/new' do
-    erb :room_new
-  end
-
-  post '/room/show' do
-    puts params.inspect
+  get_or_post '/room/show' do
+    if params[:room_name]
+      session[:room_name] = params[:room_name]
+    else
+      params[:room_name] = session[:room_name]
+    end
+    if params[:room_name].nil?
+      redirect "/"
+      return
+    end
+    @room_name = params[:room_name]
     @room = Room.find(params[:room_name])
-    puts @room.inspect
+    @room.inspect
+    @identity = session[:identity]
+    erb :room_show
   end
-
+  
+  post '/pusher/auth' do
+    puts params.inspect
+  end
+  
 end
