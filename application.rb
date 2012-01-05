@@ -1,5 +1,7 @@
 class MyApp < Sinatra::Base
-  
+    
+  DB = Sequel.sqlite
+
   set :root, File.dirname(__FILE__)
   register Sinatra::AssetPack
   
@@ -12,11 +14,11 @@ class MyApp < Sinatra::Base
       '/jst.js',
       '/js/**/*.js'
     ]
-
+  
     css :application, '/css/application.css', [
       '/css/screen.css'
     ]
-
+  
     js_compression  :jsmin      # Optional
     css_compression :sass       # Optional
   }
@@ -28,11 +30,14 @@ class MyApp < Sinatra::Base
     erb :index
   end
   
+  get '/room/create' do
+    
+  end
+    
   post '/join' do
     session[:identity] = {
       :name => params[:name],
       :avatar => Gravatar.new(params[:email]).image_url
     }
   end
-  
 end
