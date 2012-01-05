@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+		<title>
+			Planning Poker
+		</title>
+	</head>
+	<body>
+	  <% if @identity %>
+	    <%= @key %>
+	    <script type="text/javascript">
+          // Enable pusher logging - don't include this in production
+          Pusher.log = function(message) {
+            if (window.console && window.console.log) window.console.log(message);
+          };
+
+          // Flash fallback logging - don't include this in production
+          WEB_SOCKET_DEBUG = true;
+
+          var pusher = new Pusher('<%= @key %>');
+          var channel = pusher.subscribe('test_channel');
+          channel.bind('my_event', function(data) {
+            alert(data);
+          });
+        </script>
+	  <% else %>
+		<form action="/join" method="post" accept-charset="utf-8">
+			<label for="display_name">Display Name</label><input type="text" name="display_name" value="" id="display_name">
+			<label for="email">Your Email</label><input type="text" name="email" value="" id="email">
+			<p><input type="submit" value="Join &rarr;"></p>
+		</form>
+	  <% end %>
+	</body>
+</html>

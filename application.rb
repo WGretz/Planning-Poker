@@ -5,6 +5,11 @@ class MyApp < Sinatra::Base
   set :root, File.dirname(__FILE__)
   register Sinatra::AssetPack
   
+  PUSHER_KEY = ENV["PUSHER_KEY"]
+  PUSHER_SECRET = ENV["PUSHER_SECRET"]
+  
+  enable  :sessions
+  
   assets {
     serve '/js',     from: 'app/js'        # Optional
     serve '/css',    from: 'app/css'       # Optional
@@ -27,6 +32,9 @@ class MyApp < Sinatra::Base
   serve_jst '/jst.js'
   
   get '/' do
+    @identity = session[:identity]
+    @key = PUSHER_KEY
+    @sec = PUSHER_SECRET
     erb :index
   end
   
@@ -36,8 +44,9 @@ class MyApp < Sinatra::Base
     
   post '/join' do
     session[:identity] = {
-      :name => params[:name],
-      :avatar => Gravatar.new(params[:email]).image_url
+      :name => params[:display_name],
+      :avatar => "http://gravatar.com/avatar/#{Digest::MD5.hexdigest(params[:email])}"
     }
+    redirect request.referer
   end
 end
