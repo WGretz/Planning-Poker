@@ -30,8 +30,12 @@ class MyApp < Sinatra::Base
       erb :index
     end
     
-    get '/room/create' do
-      
+    get '/room/new' do
+      erb :room_new
     end
  
+    post '/room/show' do
+      raise params.inspect
+    end
+    
 end
