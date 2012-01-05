@@ -1,6 +1,8 @@
+DB = Sequel.sqlite
+
 class MyApp < Sinatra::Base
-    
-  DB = Sequel.sqlite
+
+  require './models/room.rb'
 
   set :root, File.dirname(__FILE__)
   register Sinatra::AssetPack
@@ -49,4 +51,22 @@ class MyApp < Sinatra::Base
     }
     redirect request.referer
   end
+  
+  register Sinatra::JstPages
+  serve_jst '/jst.js'
+  
+  get '/' do
+    erb :index
+  end
+  
+  get '/room/new' do
+    erb :room_new
+  end
+
+  post '/room/show' do
+    puts params.inspect
+    @room = Room.find(params[:room_name])
+    puts @room.inspect
+  end
+
 end
