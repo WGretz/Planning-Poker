@@ -1,4 +1,3 @@
-DB = Sequel.sqlite
 
 class MyApp < Sinatra::Base
 

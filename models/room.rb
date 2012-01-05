@@ -1,5 +1,10 @@
+require 'sequel'
+DB = Sequel.sqlite
 
-class Room
+
+class Room < Sequel::Model
+  
+  db= DB
   
   def self.make_table
     return if DB.table_exists? :rooms 
@@ -10,13 +15,16 @@ class Room
     end
   end
   
-  def self.find(name)
-    rooms = DB[:rooms]
-    if room = rooms.where(:name => name).first
-      return room
-    end
-    return rooms.insert(:name => name)
+  def self.find_or_create(name)
+    #if rooms.where(:name => name).first
+       self.insert(:name => name)
+    # end
+    return self.where(:name => name).first
   end
     
+  def name
+   self[:name]
+  end
+  
   make_table
 end
