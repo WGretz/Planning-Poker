@@ -28,4 +28,11 @@ class MyApp < Sinatra::Base
     erb :index
   end
   
+  post '/join' do
+    session[:identity] = {
+      :name => params[:name],
+      :avatar => Gravatar.new(params[:email]).image_url
+    }
+  end
+  
 end
